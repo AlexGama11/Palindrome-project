@@ -1,42 +1,63 @@
-#include <string>
 #include <iostream>
+#include <string>
+#include <Windows.h>
+#include <algorithm>
 
-//variables
+//variables for the program.
+//input string.
 std::string input;
 
+//output string, this will just be an unmodified copy, so if a user input a text in upper case, it comes out as upper case.
+std::string output;
+
+//bool to see if it is a palindrome or not.
 bool isPalindrome;
 
-bool isChecking = true;
+//bool for program loop.
+bool isProgramRunning = true;
 
-std::string answer;
+char uneededChars[] = "/,.-)($£!€^&*'@#~`[]{}¦|-\\_+=";
 
-//main function
 int main()
 {
-	while (isChecking)
-	{
-		//starting message
-		std::cout << "Welcome! Input a word and we'll determine if it's a palindrome or not! Press enter to exit!" << std::endl;
+	//Set's console title.
+	SetConsoleTitleW(L"Alex's Palindrome Checker!");
 
-		//getting the input
+	while (isProgramRunning)
+	{
+		//ask user for input
+		std::cout << "Welcome! Input a text to check if it's a palindrome or not! Press enter to exit!" << std::endl;
+
+		//uses getline to allow for inputs like Taco Cat, which are palindromes that have a space
 		std::getline(std::cin, input);
 
-		//Check if enter key is pressed. If it is pressed, exit the loop.
+		//if input is nothing (user clicked enter) > end the program
 		if (input.length() == 0)
 		{
-			isChecking = false;
-
 			std::cout << "Bye!" << std::endl;
+			isProgramRunning = false;
 		}
 
+		//else, check if palindrome
 		else
 		{
-			//makes the word be lower case and then checks if it is a palindrome.
-			for (int i=0; i < input.length(); i++) {
+			//copies input into output as is, so the program can spit it out later as the user input it, and not forced lower case.
+			output = input;
 
-				input.at(i) = tolower(input.at(i));
+			for (int i = 0; i < sizeof(uneededChars); i++)
+			{
+				input.erase(std::remove(input.begin(), input.end(), uneededChars[i]), input.end());
+			}
+			
 
-				if (input[i] == input[input.length()-i-1])
+			// forloop as long as the input's length
+			for (int x = 0; x < input.length(); x++)
+			{
+				//forces it to be lowercase, so it can check if its a palindrome, without it Taco cat is not seen as a palindrome, but taco cat is.
+				input[x] = std::tolower(input[x]);
+
+				//if the first letter is equal to the last one -> palindrome, if not, not a palindrome. It checks all letters due to the loop. Its input.length() - x - 1 because there's an extra character at the end of every input, which must be skipped.
+				if (input[x] == input[input.length() - x - 1])
 				{
 					isPalindrome = true;
 				}
@@ -44,24 +65,24 @@ int main()
 				else
 				{
 					isPalindrome = false;
+					x = input.length();
 				}
-
 			}
 
-			//if palindrome say that it is a palindrome, if not, its not a palindrome. Clears cin afterwards to not have problems with infinite loop
+			//if palindrome -> output is palindrome, else its not a palindrome. Clears cin after for no errors with while loop.
 			if (isPalindrome)
 			{
-				std::cout << "The word that you input is a palindrome! \n" << std::endl;
+				std::cout << output << " is a palindrome, that's " << output.length() << " characters long!\n" << std::endl;
 				std::cin.clear();
 			}
 
 			else
 			{
-				std::cout << "The word that you input is NOT a palindrome! \n" << std::endl;
+				std::cout << output << " is NOT a palindrome, but it's " << output.length() << " characters long!\n" << std::endl;
 				std::cin.clear();
 			}
 		}
-	}
 
+	}
 	return 0;
 }
