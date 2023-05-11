@@ -16,7 +16,7 @@ bool isPalindrome;
 //bool for program loop.
 bool isProgramRunning = true;
 
-char uneededChars[] = "/,.-)($£!€^&*'@#~`[]{}¦|-\\_+=";
+char uneededChars[] = "/,.-)($£!€^&*'@#~`[]{}¦|-\\_+= <>;:?!";
 
 int main()
 {
@@ -44,7 +44,7 @@ int main()
 			//copies input into output as is, so the program can spit it out later as the user input it, and not forced lower case.
 			output = input;
 
-			for (int i = 0; i < sizeof(uneededChars); i++)
+			for (int i = 0; i < sizeof(uneededChars); ++i)
 			{
 				input.erase(std::remove(input.begin(), input.end(), uneededChars[i]), input.end());
 			}
@@ -65,7 +65,7 @@ int main()
 				else
 				{
 					isPalindrome = false;
-					x = input.length();
+					break;
 				}
 			}
 
